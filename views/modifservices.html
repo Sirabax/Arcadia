@@ -1,0 +1,140 @@
+  <!DOCTYPE html>
+  <html lang="fr">
+  
+  <head>
+    <meta charset="utf-8" />
+    <title>Gestion des services - Zoo Arcadia</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+  
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+  
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Quicksand:wght@600;700&display=swap"
+      rel="stylesheet" />
+  
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+  
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet" />
+  
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+  
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" />
+  
+  </head>
+  
+  <body>
+  
+    <!-- Navbar Debut -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top py-lg-0 px-4 px-lg-5 "
+      >
+      <a href="index.html" class="navbar-brand p-0">
+        <img class="img-fluid me-3" src="img/icones/logo.png" alt="Logo" style="max-width: 90px; height: auto;">
+        <h1 class="m-0 text-primary">Zoo Arcadia</h1>
+      </a>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse py-4 py-lg-0" id="navbarCollapse">
+        <div class="navbar-nav ms-auto">
+          <a href="addUser.html" class="nav-item nav-link">Ajouter un utilisateur</a>
+          <a href="horaire.html" class="nav-item nav-link">Modifier les horaires</a>
+          <a href="validation.html" class="nav-item nav-link">Valider avis visiteurs</a>
+          <a href="modifservices.html" class="nav-item nav-link">Modifier les services</a>
+          <a href="gestionanimaux.html" class="nav-item nav-link">Gestion Habitats</a>
+          <a href="dashboard.html" class="nav-item nav-link">Tableau de Bord</a>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar Fin -->
+
+      <!-- Bouton retour debut -->
+  <div class="container d-flex justify-content-end">
+    <button class="btn btn-success nav-link text-white" onclick="window.location.href='/administration'">Retour au menu
+      Administration</button>
+  </div>
+  <!-- bouton retour Fin -->
+
+  <div class="container mt-5">
+    <h2>Ajouter un Service</h2>
+    <form action="/addService" method="post">
+      <div class="mb-3">
+        <label for="titre" class="form-label">Titre</label>
+        <input type="text" class="form-control" id="titre" name="titre" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="logo_path" class="form-label">Chemin du Logo</label>
+        <input type="text" class="form-control" id="logo_path" name="logo_path" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+  </div>
+
+  <div class="container mt-5">
+    <h2>Supprimer un Service</h2>
+    <div id="servicesList"></div>
+  </div>
+
+  <footer class="bg-brown text-white py-4 " >
+    <div class="container text-center">
+      <p class="mb-0">© 2024 Zoo Arcadia. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Fetch and display the list of services
+    fetch('/getServices')
+      .then(response => response.json())
+      .then(services => {
+        const servicesList = document.getElementById('servicesList');
+        if (services && services.length > 0) {
+          servicesList.innerHTML = services.map(service => `
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">${service.titre}</h5>
+                <p class="card-text">${service.description}</p>
+                <p class="card-text"><small class="text-muted">Logo: ${service.logo_path}</small></p>
+                <button class="btn btn-danger" onclick="deleteService(${service.id})">Supprimer</button>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          servicesList.innerHTML = '<p>Aucun service trouvé.</p>';
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des services:', error);
+        document.getElementById('servicesList').innerHTML = '<p>Erreur lors de la récupération des services.</p>';
+      });
+
+    function deleteService(id) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce service?')) {
+        fetch(`/deleteService/${id}`, { method: 'DELETE' })
+          .then(response => response.text())
+          .then(message => {
+            alert(message);
+            location.reload();
+          })
+          .catch(error => {
+            console.error('Erreur lors de la suppression du service:', error);
+            alert('Erreur lors de la suppression du service.');
+          });
+      }
+    }
+  </script>
+</body>
+</html>
