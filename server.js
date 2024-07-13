@@ -404,7 +404,6 @@ app.get('/getServices', (req, res) => {
   });
 });
 
-
 // Démarrage du serveur
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
