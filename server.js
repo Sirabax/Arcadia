@@ -6,8 +6,8 @@ const path = require('path');
 const mysql = require('mysql2');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
-const RedisStore = require('connect-redis')(session);
-const redis = require('redis');
+const RedisStore = require('connect-redis').default;
+const { createClient } = require('redis');
 require('dotenv').config();
 
 // Configuration de la connexion à la base de données MySQL
@@ -32,9 +32,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Configuration de Redis
-const redisClient = redis.createClient({
+const redisClient = createClient({
   url: process.env.REDISCLOUD_URL
 });
+
+redisClient.connect().catch(console.error);
 
 // Configuration des middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
