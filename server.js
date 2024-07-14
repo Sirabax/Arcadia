@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
@@ -8,7 +9,6 @@ const fs = require('fs');
 const nodemailer = require('nodemailer');
 const RedisStore = require('connect-redis').default;
 const { createClient } = require('redis');
-require('dotenv').config();
 
 // Configuration de la connexion à la base de données MySQL
 const db = mysql.createConnection({
