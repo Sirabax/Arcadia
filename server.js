@@ -36,7 +36,13 @@ const redisClient = createClient({
   url: process.env.REDISCLOUD_URL
 });
 
-redisClient.connect().catch(console.error);
+redisClient.on('error', (err) => {
+  console.error('Could not connect to Redis:', err);
+});
+
+redisClient.connect().then(() => {
+  console.log('Connected to Redis');
+}).catch(console.error);
 
 // Configuration des middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
