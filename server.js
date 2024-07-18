@@ -172,7 +172,7 @@ app.delete('/deleteService/:id', requireLogin, (req, res) => {
 
 // Route pour la page d'accueil
 app.get('/', (req, res) => {
-  res.render('index', { services });
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // Routes pour la gestion des utilisateurs
@@ -363,7 +363,7 @@ app.post('/send-email', (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.EMAIL_USER,
+    to: 'josette@zooarcadia.fr',
     subject: subject,
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
   };
