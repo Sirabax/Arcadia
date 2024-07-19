@@ -117,6 +117,7 @@ footer {
     color: var(--primary);
 }
 
+
 @media (max-width: 991.98px) {
     .navbar .navbar-nav .nav-link {
         margin-right: 0;
@@ -303,6 +304,10 @@ footer {
     background: rgba(0, 0, 0, .15);
     border-color: rgba(255, 255, 255, .15);
 }
+
+.list-group-item-action:hover {
+    color: #8B4513 !important; 
+  }
 
 .visiting-hours .table {
     color: var(--light);

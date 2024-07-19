@@ -77,6 +77,24 @@ function requireVetOrDir(req, res, next) {
   next();
 }
 
+// Middleware pour protéger les routes sécurisées
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    console.log('User not authenticated, redirecting to /login');
+    return res.redirect('/login');
+  }
+  next();
+}
+
+// Middleware pour protéger les routes réservées aux vétérinaires ou directeurs
+function requireVetOrDir(req, res, next) {
+  if (!req.session.user || (req.session.user.choix !== 'VET' && req.session.user.choix !== 'DIR')) {
+    console.log('User not authenticated or not a vet/director, redirecting to /login');
+    return res.redirect('/login');
+  }
+  next();
+}
+
 // Routes pour l'authentification
 app.get('/login', (req, res) => {
   console.log('GET /login route reached');
@@ -107,6 +125,17 @@ app.post('/login', (req, res) => {
     res.send('Email ou mot de passe incorrect');
   });
 });
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/administration');
+    }
+    res.clearCookie('connect.sid');
+    res.redirect('/');
+  });
+});
+
 
 // Routes pour les pages sécurisées
 app.get('/administration', requireLogin, (req, res) => {
@@ -152,7 +181,7 @@ app.get('/getServices', (req, res) => {
       console.error('Erreur de requête SQL:', err);
       return res.status(500).send('Erreur du serveur');
     }
-    console.log(results);  // Ajoutez ceci pour voir les résultats dans la console
+    console.log(results);  
     res.json(results);
   });
 });
