@@ -515,7 +515,7 @@
   <!-- Horaire Script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Fetch and display the visiting hours
+      // Extraction et affichage horaire
       fetch('/api/hours')
         .then(response => response.json())
         .then(data => {
@@ -532,7 +532,7 @@
           document.getElementById('hours-list').innerHTML = '<p>Erreur lors de la récupération des horaires.</p>';
         });
 
-      // Fetch and display the list of services
+      // Extraction et affichage liste services
       fetch('/getServices')
         .then(response => response.json())
         .then(services => {
