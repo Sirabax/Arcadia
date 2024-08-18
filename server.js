@@ -186,6 +186,19 @@ app.get('/getServices', (req, res) => {
   });
 });
 
+app.put('/updateService/:id', requireLogin, (req, res) => {
+  const { id } = req.params;
+  const { titre, description, logo_path } = req.body;
+  const sql = 'UPDATE services SET titre = ?, description = ?, logo_path = ? WHERE id = ?';
+  db.query(sql, [titre, description, logo_path, id], (err, results) => {
+    if (err) {
+      console.error('Erreur de requête SQL:', err);
+      return res.status(500).send('Erreur du serveur');
+    }
+    res.send('Service mis à jour avec succès');
+  });
+});
+
 app.delete('/deleteService/:id', requireLogin, (req, res) => {
   const { id } = req.params;
 
